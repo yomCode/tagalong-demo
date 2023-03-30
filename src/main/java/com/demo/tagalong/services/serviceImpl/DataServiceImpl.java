@@ -34,7 +34,7 @@ public class DataServiceImpl implements DataService {
         try {
             return responseManager.requestSuccessful(HttpStatus.FOUND, new HashMap<>());
         } catch (RuntimeException ex) {
-            throw new NoDataFoundException("Invalid data credentials");
+            throw new NoDataFoundException("An error occurred while trying to retrieve data");
         }
     }
 

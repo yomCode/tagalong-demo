@@ -36,7 +36,7 @@ class DataServiceImplTest {
         @Test
         public void testCreateData_Success() {
             RequestDto request = new RequestDto();
-            ApiResponse expectedResponse = new ApiResponse();
+            ApiResponse expectedResponse = new ApiResponse(new HashMap<>(), true, HttpStatus.CREATED);
             when(responseManager.requestSuccessful(HttpStatus.CREATED, new HashMap<>())).thenReturn(expectedResponse);
 
             ApiResponse actualResponse = dataService.createData(request);
@@ -46,11 +46,24 @@ class DataServiceImplTest {
             verifyNoMoreInteractions(responseManager);
         }
 
+
+    @Test
+    void testCreateDataWithException() {
+        RequestDto request = new RequestDto();
+        request.setEmail("demo@gmail.com");
+        request.setPassword("2345432");
+
+        when(responseManager.requestSuccessful(HttpStatus.CREATED, new HashMap<>()))
+                .thenThrow(new RuntimeException("An errored while trying to create data \n Please try again later."));
+
+        assertThrows(FailedToCreateDataException.class, () -> dataService.createData(request));
+    }
+
         @Test
         public void testGetData_Success() {
-            String email = "test@test.com";
-            String password = "password";
-            ApiResponse expectedResponse = new ApiResponse();
+            String email = "demo@gmail.com";
+            String password = "44323454";
+            ApiResponse expectedResponse = new ApiResponse(new HashMap<>(), true, HttpStatus.FOUND);
             when(responseManager.requestSuccessful(HttpStatus.FOUND, new HashMap<>())).thenReturn(expectedResponse);
 
             ApiResponse actualResponse = dataService.getData(email, password);
@@ -59,4 +72,17 @@ class DataServiceImplTest {
             verify(responseManager).requestSuccessful(HttpStatus.FOUND, new HashMap<>());
             verifyNoMoreInteractions(responseManager);
         }
+
+
+    @Test
+    void testGetDataWithException() {
+        String email = "demo@gmail.com";
+        String password = "454345";
+
+        when(responseManager.requestSuccessful(HttpStatus.FOUND, new HashMap<>()))
+                .thenThrow(new RuntimeException("An error occurred while trying to retrieve data"));
+
+
+        assertThrows(NoDataFoundException.class, () -> dataService.getData(email, password));
+    }
 }

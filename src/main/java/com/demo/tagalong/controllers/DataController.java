@@ -4,6 +4,7 @@ package com.demo.tagalong.controllers;
 import com.demo.tagalong.dto.ApiResponse;
 import com.demo.tagalong.dto.RequestDto;
 import com.demo.tagalong.services.DataService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,9 @@ public class DataController {
     @Autowired
     private DataService service;
 
+    public DataController(DataService service) {
+        this.service = service;
+    }
 
     @PostMapping("/")
     public ApiResponse newData(@RequestBody @Valid RequestDto request){
